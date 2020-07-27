@@ -9,5 +9,6 @@ namespace ShoppinAPICore.Util
     {
         public static readonly string CREATE_ACCOUNT = "CreateAccount";
         public static readonly string LOGIN = "Login";
+        public static readonly string SHOPPIN_ACCOUNT = "ShoppinAccount";
     }
 }

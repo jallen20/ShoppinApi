@@ -25,7 +25,7 @@ namespace ShoppinAPICore.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySQL("server=127.0.0.1;user id=root;password=password;persistsecurityinfo=True;database=shoppin_db");
+                optionsBuilder.UseMySQL("server=34.69.56.101;user id=root;password=password;persistsecurityinfo=True;database=shoppin_db;allow user variables=True");
             }
         }
 
@@ -56,7 +56,6 @@ namespace ShoppinAPICore.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.StreetAddress2)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
@@ -70,16 +69,14 @@ namespace ShoppinAPICore.Models
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Address)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.SetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("Fk_UserId");
             });
 
             modelBuilder.Entity<ShoppinAccount>(entity =>
             {
-                entity.HasNoKey();
-
-                entity.HasIndex(e => e.Email)
-                    .HasName("Email");
+                entity.HasKey(e => e.Email)
+                    .HasName("PRIMARY");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
@@ -89,20 +86,12 @@ namespace ShoppinAPICore.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.EmailNavigation)
-                    .WithMany()
-                    .HasPrincipalKey(p => p.Email)
-                    .HasForeignKey(d => d.Email)
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .HasConstraintName("ShoppinAccount_ibfk_1");
             });
 
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(e => e.Email)
-                    .HasName("Email")
-                    .IsUnique();
+                    .HasName("User_fk_Email");
 
                 entity.HasIndex(e => e.UserTypeId)
                     .HasName("UserTypeId");
@@ -110,7 +99,6 @@ namespace ShoppinAPICore.Models
                 entity.Property(e => e.UserId).HasColumnType("int(11)");
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -131,12 +119,6 @@ namespace ShoppinAPICore.Models
                 entity.Property(e => e.UserTypeId)
                     .HasMaxLength(20)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.UserType)
-                    .WithMany(p => p.User)
-                    .HasForeignKey(d => d.UserTypeId)
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .HasConstraintName("User_ibfk_2");
             });
 
             modelBuilder.Entity<UserType>(entity =>

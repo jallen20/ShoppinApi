@@ -16,8 +16,6 @@ namespace ShoppinAPICore.Models
         public string LastName { get; set; }
         public string MiddleName { get; set; }
         public string UserTypeId { get; set; }
-
-        public virtual UserType UserType { get; set; }
         public virtual ICollection<Address> Address { get; set; }
     }
 }
