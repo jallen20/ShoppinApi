@@ -37,7 +37,20 @@ namespace ShoppinAPICore.Controllers
 
             var account = this.context.ShoppinAccount.Find(shoppinAccount.Email);
 
-            return account.Password == shoppinAccount.Password ? account : null;
+            if (account != null && account.Password == shoppinAccount.Password)
+            {
+                var token = TokenBuider.Build();
+                var session = new Session()
+                {
+                    Email = account.Email,
+                    SessionToken = token
+                };
+                this.context.Session.Add(session);
+                this.context.SaveChanges();
+                return account;
+            }
+
+            return new ShoppinAccount();
         }
 
         [HttpPost]
@@ -50,27 +63,18 @@ namespace ShoppinAPICore.Controllers
             }
             try
             {
-                var account = req.ShoppinAccount;
+                this.context.Address.Add(req.Address);
+                req.User.AddressId = req.Address.AddressId;
                 this.context.User.Add(req.User);
-                this.context.ShoppinAccount.Add(account);
+                this.context.ShoppinAccount.Add(req.ShoppinAccount);
 
                 await this.context.SaveChangesAsync();
 
-                var users = this.context.User.Where(u => u.Email == req.User.Email).ToList();
-
-                if (users.Count == 1)
-                {
-                    req.Address.UserId = users[0].UserId;
-                    this.context.Address.Add(req.Address);
-                }
-
-                await this.context.SaveChangesAsync();
-
-                return account;
+                return req.ShoppinAccount;
             }
             catch (Exception e) { }
-            
-            return null;
+
+            return NoContent();
         }
 
         public sealed class CreateAccountRequest

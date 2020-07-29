@@ -1,2 +1,3 @@
 --IMPORTANT COMMANDS--
- Scaffold-DbContext "server=127.0.0.1;user id=root;password=password;persistsecurityinfo=True;database=shoppin_db" MySql.Data.EntityFrameworkCore -OutputDir Models -force
+ Scaffold-DbContext "server=34.69.56.101;user id=root;password=password;persistsecurityinfo=True;database=shoppin_db;allow user variables=True" MySql.Data.EntityFrameworkCore -OutputDir tmp -force
+cloud_sql_proxy -instances=shoppin-283920:us-central1:shoppin2=tcp:3306

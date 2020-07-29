@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace ShoppinAPICore.Models
 {
-    public partial class UserType
+    public partial class TransactionType
     {
-        public string UserTypeId { get; set; }
-
+        public string TransactionTypeId { get; set; }
     }
 }
